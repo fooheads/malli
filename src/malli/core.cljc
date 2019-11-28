@@ -1,7 +1,8 @@
 (ns malli.core
   (:refer-clojure :exclude [-name eval name merge])
   (:require [sci.core :as sci]
-            [cljc.java-time.local-date :as ld])
+            [cljc.java-time.local-date]
+            [cljc.java-time.local-time])
   #?(:clj (:import (java.util.regex Pattern))))
 
 ;;
