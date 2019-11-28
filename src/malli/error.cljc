@@ -30,6 +30,8 @@
    'uri? {:error/message {:en "should be uri"}}
    #?@(:clj ['decimal? {:error/message {:en "should be decimal"}}])
    'inst? {:error/message {:en "should be inst"}}
+   'date? {:error/message {:en "should be date"}}
+   'time? {:error/message {:en "should be time"}}
    'seqable? {:error/message {:en "should be seqable"}}
    'indexed? {:error/message {:en "should be indexed"}}
    'map? {:error/message {:en "should be map"}}
