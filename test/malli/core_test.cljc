@@ -1,5 +1,7 @@
 (ns malli.core-test
   (:require [clojure.test :refer [deftest testing is are]]
+            [cljc.java-time.local-date :as ld]
+            [cljc.java-time.local-time :as lt]
             [malli.core :as m]
             [malli.edn :as me]
             [malli.transform :as transform]))
@@ -767,3 +769,13 @@
 (deftest custom-into-schema-test
   (doseq [value [[1 2 3] '(1 2 3)]]
     (is (= true (m/validate [sequential int?] value)))))
+
+(deftest date-test
+  (is (= true (m/validate [m/date?] (ld/parse "2019-01-01"))))
+  (is (= false (m/validate [m/date?] "2019-01-01"))))
+
+(deftest time-test
+  (is (= true (m/validate [m/time?] (lt/parse "13:45"))))
+  (is (= true (m/validate [m/time?] (lt/parse "13:45:05.888"))))
+  (is (= false (m/validate [m/time?] "13:45"))))
+

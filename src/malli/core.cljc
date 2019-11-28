@@ -1,7 +1,19 @@
 (ns malli.core
   (:refer-clojure :exclude [-name eval name merge])
-  (:require [sci.core :as sci])
+  (:require [sci.core :as sci]
+            [cljc.java-time.local-date :as ld])
   #?(:clj (:import (java.util.regex Pattern))))
+
+;;
+;; predicates
+;;
+
+(defn date? [v]
+  (= (type v) java.time.LocalDate))
+
+(defn time? [v]
+  (= (type v) java.time.LocalTime))
+
 
 ;;
 ;; protocols and records
@@ -800,7 +812,8 @@
         #'boolean? #'string? #'ident? #'simple-ident? #'qualified-ident? #'keyword? #'simple-keyword?
         #'qualified-keyword? #'symbol? #'simple-symbol? #'qualified-symbol? #'uuid? #'uri? #?(:clj #'decimal?)
         #'inst? #'seqable? #'indexed? #'map? #'vector? #'list? #'seq? #'char? #'set? #'nil? #'false? #'true?
-        #'zero? #?(:clj #'rational?) #'coll? #'empty? #'associative? #'sequential? #?(:clj #'ratio?) #?(:clj #'bytes?)]
+        #'zero? #?(:clj #'rational?) #'coll? #'empty? #'associative? #'sequential? #?(:clj #'ratio?) #?(:clj #'bytes?)
+        #'date? #'time?]
        (reduce -register-var {})))
 
 (def class-registry
