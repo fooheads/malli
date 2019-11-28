@@ -2,7 +2,9 @@
   #?(:cljs (:refer-clojure :exclude [Inst Keyword UUID]))
   (:require #?@(:cljs [[goog.date.UtcDateTime]
                        [goog.date.Date]])
-            [malli.core :as m])
+            [malli.core :as m]
+            [cljc.java-time.local-date :as ld]
+            [cljc.java-time.local-time :as lt])
   #?(:clj
      (:import (java.util Date UUID)
               (java.time Instant ZoneId)
@@ -89,6 +91,20 @@
       (catch #?(:clj Exception, :cljs js/Error) _ x))
     x))
 
+(defn string->local-date [x]
+  (if (string? x)
+    (try
+      (ld/parse x)
+      (catch #?(:clj Exception, :cljs js/Error) _ x))
+    x))
+
+(defn string->local-time [x]
+  (if (string? x)
+    (try
+      (lt/parse x)
+      (catch #?(:clj Exception, :cljs js/Error) _ x))
+    x))
+
 #?(:clj
    (def ^DateTimeFormatter +date->string-format+
      (-> (DateTimeFormatter/ofPattern "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
@@ -100,6 +116,16 @@
       #?(:clj  (.format +date->string-format+ (Instant/ofEpochMilli (inst-ms x)))
          :cljs (.toISOString x))
       (catch #?(:clj Exception, :cljs js/Error) _ x))
+    x))
+
+(defn local-date->string [x]
+  (if (m/date? x)
+    (str x)
+    x))
+
+(defn local-time->string [x]
+  (if (m/time? x)
+    (str x)
     x))
 
 (defn string->symbol [x]
@@ -142,7 +168,9 @@
 
    'uuid? (constantly string->uuid)
 
-   'inst? (constantly string->date)})
+   'inst? (constantly string->date)
+   'date? (constantly string->local-date)
+   'time? (constantly string->local-time)})
 
 (def +json-encoders+
   {'keyword? (constantly m/keyword->string)
@@ -159,6 +187,8 @@
    ;:bigdec any->string
 
    'inst? (constantly date->string)
+   'date? (constantly local-date->string)
+   'time? (constantly local-time->string)
    #?@(:clj ['ratio? number->double])})
 
 (def +string-decoders+

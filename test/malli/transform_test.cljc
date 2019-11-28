@@ -2,7 +2,9 @@
   (:require [clojure.test :refer [deftest testing is]]
             [malli.core :as m]
             [malli.transform :as mt]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [cljc.java-time.local-date :as ld]
+            [cljc.java-time.local-time :as lt]))
 
 (deftest string->long
   (is (= 1 (mt/string->long "1")))
@@ -152,7 +154,31 @@
       (is (= ["1" "kikka"] (m/encode [:tuple int? keyword?] [1 :kikka] mt/string-transformer)))
       (is (= ["kikka" "1"] (m/encode [:tuple keyword? int?] [:kikka 1] mt/string-transformer)))
       (is (= 1.0 (m/encode [:tuple keyword? int?] 1.0 mt/string-transformer)))
-      (is (= ["kikka" "1" "2"] (m/encode [:tuple keyword? int?] [:kikka 1 "2"] mt/string-transformer))))))
+      (is (= ["kikka" "1" "2"] (m/encode [:tuple keyword? int?] [:kikka 1 "2"] mt/string-transformer)))))
+  (testing "date"
+    (testing "decode"
+      ;; TODO: .equals needed for cljs. Bug in cljs.java-time?
+      (is (.equals (ld/parse "2018-12-19") (m/decode [m/date?] "2018-12-19" mt/string-transformer)))
+      (is (= nil (m/decode [m/date?] nil mt/string-transformer)))
+      (is (= "bekväm" (m/decode [m/date?] "bekväm" mt/string-transformer)))
+      (is (= 16 (m/decode [m/date?] 16 mt/string-transformer))))
+    (testing "encode"
+      (is (= "2018-12-19" (m/encode [m/date?] (ld/parse "2018-12-19") mt/string-transformer)))
+      (is (= nil (m/encode [m/date?] nil mt/string-transformer)))
+      (is (= "bekväm" (m/encode [m/date?] "bekväm" mt/string-transformer)))
+      (is (= 16 (m/encode [m/date?] 16 mt/string-transformer)))))
+  (testing "time"
+    (testing "decode"
+      ;; TODO: .equals needed for cljs. Bug in cljs.java-time?
+      (is (.equals (lt/parse "13:45") (m/decode [m/time?] "13:45" mt/string-transformer)))
+      (is (= nil (m/decode [m/time?] nil mt/string-transformer)))
+      (is (= "bekväm" (m/decode [m/time?] "bekväm" mt/string-transformer)))
+      (is (= 16 (m/decode [m/time?] 16 mt/string-transformer))))
+    (testing "encode"
+      (is (= "13:45" (m/encode [m/time?] (lt/parse "13:45") mt/string-transformer)))
+      (is (= nil (m/encode [m/time?] nil mt/string-transformer)))
+      (is (= "bekväm" (m/encode [m/time?] "bekväm" mt/string-transformer)))
+      (is (= 16 (m/encode [m/time?] 16 mt/string-transformer))))))
 
 ;; TODO: this is wrong!
 (deftest collection-transform-test
