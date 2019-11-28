@@ -5,7 +5,9 @@
             [clojure.test.check.rose-tree :as rose]
             [clojure.spec.gen.alpha :as ga]
             [malli.core :as m]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [cljc.java-time.local-date :as ld]
+            [cljc.java-time.local-time :as lt]))
 
 (declare generator)
 
@@ -77,6 +79,9 @@
 (defmethod -generator :enum [schema opts] (gen/elements (m/children schema opts)))
 (defmethod -generator :maybe [schema opts] (gen/one-of [(gen/return nil) (-> schema (m/children opts) first (generator opts))]))
 (defmethod -generator :tuple [schema opts] (apply gen/tuple (mapv #(generator % opts) (m/children schema opts))))
+
+(defmethod -generator 'date? [schema opts] (gen/fmap #(ld/of-epoch-day %) (gen/large-integer* {:min 0 :max 40000})))
+(defmethod -generator 'time? [schema opts] (gen/fmap #(lt/of-second-of-day %) (gen/large-integer* {:min 0 :max 86400}))) 
 #?(:clj (defmethod -generator :re [schema opts] (-re-gen schema opts)))
 
 (defn- -create [schema opts]
