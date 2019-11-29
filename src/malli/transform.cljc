@@ -4,7 +4,8 @@
                        [goog.date.Date]])
             [malli.core :as m]
             [cljc.java-time.local-date :as ld]
-            [cljc.java-time.local-time :as lt])
+            [cljc.java-time.local-time :as lt]
+            [cljc.java-time.predicates :refer [date? time?]])
   #?(:clj
      (:import (java.util Date UUID)
               (java.time Instant ZoneId)
@@ -119,12 +120,12 @@
     x))
 
 (defn local-date->string [x]
-  (if (m/date? x)
+  (if (date? x)
     (str x)
     x))
 
 (defn local-time->string [x]
-  (if (m/time? x)
+  (if (time? x)
     (str x)
     x))
 

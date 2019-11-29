@@ -32,6 +32,10 @@
         borkdude/edamame {:mvn/version "0.0.8-alpha.4"}
         org.clojure/test.check {:mvn/version "0.10.0"}
         com.gfredericks/test.chuck {:mvn/version "0.2.10"}
-        cljc.java-time {:mvn/version "0.1.6"}}}
+        fooheads/cljs.java-time {:git/url "https://github.com/fooheads/cljs.java-time"
+                                 :sha "a93090a644fd3986cccaad54084d814a1b14704d"}
+        fooheads/cljc.java-time {:git/url "https://github.com/fooheads/cljc.java-time"
+                                 :sha "47da966a5d70b1cc8e7045f95dcd65a55dba0f03"}}}
+        ;cljc.java-time {:mvn/version "0.1.6"}}}
 
 

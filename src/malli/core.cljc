@@ -1,20 +1,8 @@
 (ns malli.core
   (:refer-clojure :exclude [-name eval name merge])
   (:require [sci.core :as sci]
-            [cljc.java-time.local-date]
-            [cljc.java-time.local-time])
+            [cljc.java-time.predicates :refer [date? time?]])
   #?(:clj (:import (java.util.regex Pattern))))
-
-;;
-;; predicates
-;;
-
-(defn date? [v]
-  (= (type v) java.time.LocalDate))
-
-(defn time? [v]
-  (= (type v) java.time.LocalTime))
-
 
 ;;
 ;; protocols and records

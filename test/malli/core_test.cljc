@@ -2,6 +2,7 @@
   (:require [clojure.test :refer [deftest testing is are]]
             [cljc.java-time.local-date :as ld]
             [cljc.java-time.local-time :as lt]
+            [cljc.java-time.predicates :refer [date? time?]]
             [malli.core :as m]
             [malli.edn :as me]
             [malli.transform :as transform]))
@@ -771,11 +772,11 @@
     (is (= true (m/validate [sequential int?] value)))))
 
 (deftest date-test
-  (is (= true (m/validate [m/date?] (ld/parse "2019-01-01"))))
-  (is (= false (m/validate [m/date?] "2019-01-01"))))
+  (is (= true (m/validate [date?] (ld/parse "2019-01-01"))))
+  (is (= false (m/validate [date?] "2019-01-01"))))
 
 (deftest time-test
-  (is (= true (m/validate [m/time?] (lt/parse "13:45"))))
-  (is (= true (m/validate [m/time?] (lt/parse "13:45:05.888"))))
-  (is (= false (m/validate [m/time?] "13:45"))))
+  (is (= true (m/validate [time?] (lt/parse "13:45"))))
+  (is (= true (m/validate [time?] (lt/parse "13:45:05.888"))))
+  (is (= false (m/validate [time?] "13:45"))))
 
